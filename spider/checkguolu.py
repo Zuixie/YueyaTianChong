@@ -4,6 +4,7 @@ import requests
 import re
 import time
 import sys
+import threading
 
 ## use to check guo.lu and download pic
 
@@ -37,10 +38,12 @@ class Guolu:
         return re.findall('href="(.*?)"', picdiv, re.S)
     
     def savePicture(self, url, path):
+        print 'start downlload ' + url
         pic = requests.get(url).content
         fp = open(path + url.split('/')[-1] , 'wb')
         fp.write(pic)
         fp.close()
+        print ' | end '+ url
     
 if __name__ == '__main__':
     
@@ -62,9 +65,14 @@ if __name__ == '__main__':
     
         detail = g.getDetailHtml(updataurl)
         imgurls = g.getDetailImgUrls(detail)
+        threads = []
         for imgurl in imgurls:
-            print 'start downlload ' + imgurl
-            g.savePicture(imgurl, sys.argv[1])
-    
+            t = threading.Thread(target=g.savePicture, args=(imgurl, sys.argv[1]))
+            t.start()
+            threads.append(t)
+            #g.savePicture(imgurl, sys.argv[1])
+        for th in threads:
+            th.join()
+        
         etime = time.time()
         print 'use time %f second'%(etime - stime)
