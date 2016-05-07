@@ -7,14 +7,18 @@ import sys
 import threading
 
 ## use to check guo.lu and download pic
+# Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.86 Safari/537.36
+
 
 class Guolu:
     index_rul = 'http://guo.lu'
+    headers = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.86 Safari/537.36'}
+
     def __init__(self, url):
         self.index_rul = url.strip()
     
     def getIndexHtml(self):
-        return requests.get(self.index_rul).text
+        return requests.get(self.index_rul, headers = self.headers).text
     
     def getIndexUrllist(self, html):
         links = re.findall('http://guo.lu/\d+', html, re.S)
@@ -31,7 +35,7 @@ class Guolu:
         return re.search('(http://guo.lu/\d+)', post0, re.S).group(1)
 
     def getDetailHtml(self, url):   
-        return requests.get(url).text
+        return requests.get(url, headers = self.headers).text
     
     def getDetailImgUrls(self, html):
         picdiv = re.search('<div class="images">(.*?)</div>', html, re.S).group(1)
@@ -39,7 +43,7 @@ class Guolu:
     
     def savePicture(self, url, path):
         print 'start downlload ' + url
-        pic = requests.get(url).content
+        pic = requests.get(url, headers = self.headers).content
         fp = open(path + url.split('/')[-1] , 'wb')
         fp.write(pic)
         fp.close()
