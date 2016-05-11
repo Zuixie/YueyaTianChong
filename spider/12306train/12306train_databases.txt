@@ -1,0 +1,96 @@
+# 12306train databases design
+
+CREATE DATABASE 12306train_test DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+database name : 12306train
+table: train
+    id int(10) NOT NULL primary key AUTO_INCREMENT,
+    start_station_name 始发站 varchar(255)
+    end_station_name 终点站 varchar(255)
+    
+    from_station_name 出发站 varchar(255)
+    from_time 出发时间 char(5)
+    to_station_name 到站 varchar(255)
+    to_time 到站时间 char(5)
+    use_time 历时时间 int(4) 
+    
+    train_code 车次 varchar(10)
+    first_seat_num 一等座 int(4)
+    second_seat_num 二等座 int(4)
+    no_seat_num 无座 int(4)
+    
+    train_start_date 查询日期/出发日期 date
+    
+    record_date 记录日期 date
+    record_time 记录时间 time
+    
+    note 备注 varchar(255)
+
+sql:
+create table train(
+    id int(10) NOT NULL primary key AUTO_INCREMENT,
+    start_station_name varchar(255),
+    end_station_name varchar(255),
+    from_station_name varchar(255),
+    from_time char(5),
+    to_station_name varchar(255),
+    to_time char(5),
+    use_time int(4),
+    train_code varchar(10),
+    first_seat_num int(4),
+    second_seat_num int(4),
+    no_seat_num int(4),
+    train_start_date date,
+    record_date date,
+    record_time time
+);
+
+insert into train (
+    start_station_name, end_station_name, from_station_name, from_time, to_station_name, to_time, use_time,
+    train_code, first_seat_num, second_seat_num, no_seat_num, train_start_date, record_date, record_time
+    ) values (
+    '始发站', '终点站', '上车站', '00:00', '下车站', '03:00', 180, 
+    'D0000', 1111, 2222, 1000, '2016-06-08', curdate(), curtime() );
+    
+# 进度
+2016年05月06日00:21:25
+    明天:
+    1. 创建数据库
+    2. 写入数据
+    3. 运行
+    
+2016年05月07日23:31:04
+    1. date 格式的转换 OK
+    2. 两张表,正式的和测试的 OK 两个数据库
+    
+    3. 优化代码,并添加参数设置
+        main 
+            - 1. look
+            - 2. save
+                - save to test
+                - save to product 
+            class TrainInfo
+                -i station date
+                -o show savetodb
+                attr: 
+                    from_station_name
+                    from_station_code
+                    to_station_name
+                    to_station_code
+                    train_start_date
+                func:
+                    getdatas
+                    showdatas
+                    savedatas
+                .. 明日继续完成 1. save 和 station_code 的处理,文件存储->util
+    4. log的记录
+        - no test
+        
+    5. 剩余参数的处理部分
+        -f from
+        -t to
+        -d date
+        -m model (show, test, official)
+        -h 
+        -v
+done 2016年05月11日23:35:53    
