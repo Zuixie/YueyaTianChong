@@ -11,7 +11,7 @@ import threading
 
 
 class Guolu:
-    index_rul = 'http://guo.lu'
+    index_rul = 'http://isujin.com'
     headers = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.86 Safari/537.36'}
 
     def __init__(self, url):
@@ -21,7 +21,7 @@ class Guolu:
         return requests.get(self.index_rul, headers = self.headers).text
     
     def getIndexUrllist(self, html):
-        links = re.findall('http://guo.lu/\d+', html, re.S)
+        links = re.findall(self.index_rul+'/\d+', html, re.S)
         return {}.fromkeys(links).keys() # grep the same url
     
     def getPost0Source(self, index):
@@ -32,7 +32,7 @@ class Guolu:
     def getUpdataTitle(self, post0):
         return re.search('/>(.*?)</a>', post0, re.S).group(1)
     def getUpdataUrl(self, post0):
-        return re.search('(http://guo.lu/\d+)', post0, re.S).group(1)
+        return re.search('({0}/\d+)'.format(self.index_rul), post0, re.S).group(1)
 
     def getDetailHtml(self, url):   
         return requests.get(url, headers = self.headers).text
@@ -51,7 +51,7 @@ class Guolu:
     
 if __name__ == '__main__':
     
-    g = Guolu('http://guo.lu')
+    g = Guolu('http://isujin.com')
     html = g.getIndexHtml()
     post0 = g.getPost0Source(html)
     
